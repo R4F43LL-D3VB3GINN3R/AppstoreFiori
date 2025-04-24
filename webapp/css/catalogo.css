@@ -1,0 +1,18 @@
+.iconTabFilter {
+    cursor: pointer;
+    background-color: aquamarine;
+    font-size: 20px;
+    color: rgb(255, 255, 255);
+}
+
+.tableClass {
+    border: 1px solid rgb(65, 86, 117);
+    border-radius: 5px;
+    background-color: rgb(0, 0, 0);
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+}
+
+.tableClass:hover {
+    cursor: pointer;
+}

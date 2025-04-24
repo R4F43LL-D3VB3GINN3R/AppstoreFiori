@@ -1,0 +1,12 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form">
+    <Dialog id="dialog2" title="">
+        <content>
+            <f:SimpleForm id="simpleform2" width="100%" layout="ResponsiveGridLayout" editable="true">
+                <Label id="label2" text="Digite a Mensagem" labelFor="mcb_dialogReqValValidador" design="Bold" required="true" />
+                <TextArea id="newMail" height="100px" />
+                <Button id="btsender" text="Enviar" press="onSendMail"></Button>
+                <Button id="btcancel" text="Cancelar" press="onCancelMail"></Button>
+             </f:SimpleForm>
+        </content>
+    </Dialog>
+</core:FragmentDefinition>
