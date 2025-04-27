@@ -58,12 +58,12 @@ function (Controller, JSONModel, FilterOperator, Filter, formatter, service, lib
             this._setExcelProdutos(oEvent);
         },
 
-        onEnviaEmail: function () {
+        getOrderRequest: function () {
 
             if (!this.oReqVal_Popup) {
                 Fragment.load({
-                    id: this.getView().getId() + "mailPopup",
-                    name: "sbx.rla.bc.appstore.fragments.mailPopup",
+                    id: this.getView().getId() + "orderPopup",
+                    name: "sbx.rla.bc.appstore.fragments.orderPopup",
                     controller: this,
                 }).then(function (oFragment) {
                     this.oReqVal_Popup = oFragment;
@@ -75,6 +75,63 @@ function (Controller, JSONModel, FilterOperator, Filter, formatter, service, lib
             } else {
                 this.oReqVal_Popup.open();
             }
+        },
+
+        onCancelOrder: function() {
+            if (this.oReqVal_Popup) {
+                this.oReqVal_Popup.close();
+            }
+        },
+
+        onSendOrder: function() {
+
+            // recebe a quantidade do fragment
+            var newInput = Fragment.byId(this.getView().getId() + "orderPopup", "quantityInput");
+            var newQuantity  = newInput.getValue();
+            
+            // encerra o fragment
+            this.oReqVal_Popup.close();
+            
+            // recebe os produtos selecionados
+            this._getTableContent();
+            this._getTableContext();
+
+            //verifica se há dados enviados da tabela
+            if (!this.Products || this.Products.length === 0) {
+                MessageBox.information("Selecione um produto do Catálogo");
+                return;
+            }
+
+            this.productsContext.forEach(function (oProduct) {
+
+                debugger;
+
+                var sPath = "/ProdutoSet(IdProduto='" + oProduct.IdProduto + "',IdCategoria='" + oProduct.IdCategoria + "')"; 
+        
+                var oPayload = {
+                    "Descricao":      oProduct.Descricao,
+                    "PrecoUnitario":  oProduct.PrecoUnitario,
+                    "Estoque":        oProduct.Estoque, 
+                    "DataEntrada":    oProduct.DataEntrada instanceof Date ? oProduct.DataEntrada.toISOString().slice(0, 10) + "T00:00:00" : oProduct.DataEntrada,
+                    "DataAlteracao":  oProduct.DataAlteracao instanceof Date ? oProduct.DataAlteracao.toISOString().slice(0, 10) + "T00:00:00" : oProduct.DataAlteracao,
+                    "Username":       oProduct.Username
+                };
+
+                console.log("Requisição enviada:", oPayload);
+                console.log("sPath:", sPath);
+                console.log("Payload:", oPayload);
+
+                this.oModel.update(sPath, oPayload, {
+                    method: "PUT", 
+                    success: function () {
+                        MessageToast.show("Produto " + oProduct.IdProduto + " atualizado com sucesso.");
+                    },
+                    error: function (oError) {
+                        MessageBox.error("Erro ao atualizar produto " + oProduct.IdProduto);
+                    }
+                });
+
+            }.bind(this));
         },
 
         //----------------------------------------------------------------------------
