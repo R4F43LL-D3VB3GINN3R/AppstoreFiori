@@ -96,7 +96,7 @@
 
         <!-- Botões do Footer -->
         <semantic:positiveAction>
-            <semantic:PositiveAction id="sendPositive" text="Novo" press=""/>
+            <semantic:PositiveAction id="sendPositive" text="Pedido" press="getOrderRequest"/>
         </semantic:positiveAction>
         <semantic:negativeAction>
             <semantic:NegativeAction id="sendNegative" text="Remover" press=""/>

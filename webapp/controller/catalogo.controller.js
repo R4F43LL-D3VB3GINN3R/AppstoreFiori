@@ -34,8 +34,12 @@ function (Controller, JSONModel, FilterOperator, Filter, formatter, service, lib
             this.excelBase64;     // excel em base64
             this.excelJson;       // dados da tabela em Json 
             this.excelWorkBook;   // arquivo excel para backend
-            this.excelBlob;       // blob para arquivo excel
-            this.excelBase64;     // excel convertido em base64
+
+            // dados para atualizacao de estoque
+            this.orderQuantity; // quantidade do pedido
+            this.orderPath;     // caminho para pedido
+            this.oRequestOrder; // corpo da requisição
+            this.oJSONOrder;    // requisicao json
 
             // parametros de entrada para carregamento de serviço
             this.oModel     = this.getOwnerComponent().getModel(); 
@@ -59,7 +63,10 @@ function (Controller, JSONModel, FilterOperator, Filter, formatter, service, lib
         },
 
         getOrderRequest: function () {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2e3a2bc (002)
             if (!this.oReqVal_Popup) {
                 Fragment.load({
                     id: this.getView().getId() + "orderPopup",
@@ -83,6 +90,7 @@ function (Controller, JSONModel, FilterOperator, Filter, formatter, service, lib
             }
         },
 
+<<<<<<< HEAD
         onSendOrder: function() {
 
             // recebe a quantidade do fragment
@@ -97,10 +105,32 @@ function (Controller, JSONModel, FilterOperator, Filter, formatter, service, lib
             this._getTableContext();
 
             //verifica se há dados enviados da tabela
+=======
+        _getQuantityStock: function() {
+
+            // recebe a quantidade do fragment
+            var newInput = Fragment.byId(this.getView().getId() + "orderPopup", "quantityInput");
+            this.orderQuantity = newInput.getValue();
+            
+            this.oReqVal_Popup.close();
+        },
+
+        _setJSONOrder: function() {
+            
+        },
+
+        onSendOrder: async function() {
+
+            this._getQuantityStock(); // recebe a quantidade
+            this._getTableContent();  // recebe dados selecionados da tabela
+            this._getTableContext();  // recebe dados atuais da tabela selecionados
+            
+>>>>>>> 2e3a2bc (002)
             if (!this.Products || this.Products.length === 0) {
                 MessageBox.information("Selecione um produto do Catálogo");
                 return;
             }
+<<<<<<< HEAD
 
             this.productsContext.forEach(function (oProduct) {
 
@@ -132,6 +162,44 @@ function (Controller, JSONModel, FilterOperator, Filter, formatter, service, lib
                 });
 
             }.bind(this));
+=======
+        
+            // itera por produtos selecionados
+            // o foreach nao permite await em requisicoes
+            for (let oProduct of this.productsContext) {
+
+                this.orderPath = "/ProdutoSet(IdProduto='" + oProduct.IdProduto + "',IdCategoria='" + oProduct.IdCategoria + "')";
+                
+                // corpo da requisição (json)
+                this.oRequestOrder = {
+                    "IdProduto": oProduct.IdProduto,
+                    "IdCategoria": oProduct.IdCategoria,
+                    "Descricao": oProduct.Descricao,
+                    "PrecoUnitario": oProduct.PrecoUnitario,
+                    "Estoque": oProduct.Estoque + Number(this.orderQuantity), // Atualiza o estoque
+                    "DataEntrada": oProduct.DataEntrada instanceof Date ? oProduct.DataEntrada.toISOString().slice(0, 10) + "T00:00:00" : oProduct.DataEntrada,
+                    "DataAlteracao": oProduct.DataAlteracao instanceof Date ? oProduct.DataAlteracao.toISOString().slice(0, 10) + "T00:00:00" : oProduct.DataAlteracao,
+                    "Username": oProduct.Username
+                };
+
+                this.oJSONOrder = new JSONModel(this.oRequestOrder);
+
+                // atualiza o estoque
+                await new Promise((resolve, reject) => {
+                    this.oModel.update(this.orderPath, this.oJSONOrder.getData(), {
+                        method: "PUT",
+                        success: function () {
+                            resolve(); 
+                            MessageToast.show("Produto " + oProduct.IdProduto + " atualizado com sucesso.");
+                        },
+                        error: function (oError) {
+                            reject(oError); 
+                            MessageBox.error("Erro ao atualizar produto " + oProduct.IdProduto);
+                        }
+                    });
+                });
+            }
+>>>>>>> 2e3a2bc (002)
         },
 
         //----------------------------------------------------------------------------

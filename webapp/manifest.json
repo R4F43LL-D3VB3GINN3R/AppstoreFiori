@@ -73,7 +73,10 @@
       "": {
         "dataSource": "mainService",
         "preload": true,
-        "settings": {}
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+			    "defaultUpdateMethod": "Put"
+        }
       }
     },
     "resources": {
