@@ -63,10 +63,7 @@ function (Controller, JSONModel, FilterOperator, Filter, formatter, service, lib
         },
 
         getOrderRequest: function () {
-<<<<<<< HEAD
 
-=======
->>>>>>> 2e3a2bc (002)
             if (!this.oReqVal_Popup) {
                 Fragment.load({
                     id: this.getView().getId() + "orderPopup",
@@ -90,22 +87,7 @@ function (Controller, JSONModel, FilterOperator, Filter, formatter, service, lib
             }
         },
 
-<<<<<<< HEAD
-        onSendOrder: function() {
-
-            // recebe a quantidade do fragment
-            var newInput = Fragment.byId(this.getView().getId() + "orderPopup", "quantityInput");
-            var newQuantity  = newInput.getValue();
-            
-            // encerra o fragment
-            this.oReqVal_Popup.close();
-            
-            // recebe os produtos selecionados
-            this._getTableContent();
-            this._getTableContext();
-
             //verifica se há dados enviados da tabela
-=======
         _getQuantityStock: function() {
 
             // recebe a quantidade do fragment
@@ -115,54 +97,16 @@ function (Controller, JSONModel, FilterOperator, Filter, formatter, service, lib
             this.oReqVal_Popup.close();
         },
 
-        _setJSONOrder: function() {
-            
-        },
-
         onSendOrder: async function() {
 
             this._getQuantityStock(); // recebe a quantidade
             this._getTableContent();  // recebe dados selecionados da tabela
             this._getTableContext();  // recebe dados atuais da tabela selecionados
             
->>>>>>> 2e3a2bc (002)
             if (!this.Products || this.Products.length === 0) {
                 MessageBox.information("Selecione um produto do Catálogo");
                 return;
             }
-<<<<<<< HEAD
-
-            this.productsContext.forEach(function (oProduct) {
-
-                debugger;
-
-                var sPath = "/ProdutoSet(IdProduto='" + oProduct.IdProduto + "',IdCategoria='" + oProduct.IdCategoria + "')"; 
-        
-                var oPayload = {
-                    "Descricao":      oProduct.Descricao,
-                    "PrecoUnitario":  oProduct.PrecoUnitario,
-                    "Estoque":        oProduct.Estoque, 
-                    "DataEntrada":    oProduct.DataEntrada instanceof Date ? oProduct.DataEntrada.toISOString().slice(0, 10) + "T00:00:00" : oProduct.DataEntrada,
-                    "DataAlteracao":  oProduct.DataAlteracao instanceof Date ? oProduct.DataAlteracao.toISOString().slice(0, 10) + "T00:00:00" : oProduct.DataAlteracao,
-                    "Username":       oProduct.Username
-                };
-
-                console.log("Requisição enviada:", oPayload);
-                console.log("sPath:", sPath);
-                console.log("Payload:", oPayload);
-
-                this.oModel.update(sPath, oPayload, {
-                    method: "PUT", 
-                    success: function () {
-                        MessageToast.show("Produto " + oProduct.IdProduto + " atualizado com sucesso.");
-                    },
-                    error: function (oError) {
-                        MessageBox.error("Erro ao atualizar produto " + oProduct.IdProduto);
-                    }
-                });
-
-            }.bind(this));
-=======
         
             // itera por produtos selecionados
             // o foreach nao permite await em requisicoes
@@ -199,7 +143,6 @@ function (Controller, JSONModel, FilterOperator, Filter, formatter, service, lib
                     });
                 });
             }
->>>>>>> 2e3a2bc (002)
         },
 
         //----------------------------------------------------------------------------
@@ -359,7 +302,7 @@ function (Controller, JSONModel, FilterOperator, Filter, formatter, service, lib
                         "Stringlink": sBase64
                     }, 
                     success: function (oData) {
-                        MessageToast.show("Arquivo enviado com sucesso!");
+                        MessageToast.show("Email enviado com sucesso!");
                         resolve(oData);
                     },
                     error: function (oError) {
